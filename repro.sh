@@ -15,6 +15,9 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+# Bring loopback up if not
+ip link show lo | grep -q 'state UP' || ip link set lo up
+
 # Check that nothing is attached to loopback so far
 if bpftool net show dev lo | grep "clsact/ingress"; then
 	>&2 echo Something is already attached to lo
